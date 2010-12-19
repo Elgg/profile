@@ -70,25 +70,21 @@ function profile_page_handler($page) {
 		$action = $page[1];
 	}
 
-	switch ($action) {
-		case 'edit':
-			// use for the core profile edit page
-			require $CONFIG->path . 'pages/profile/edit.php';
-			return;
-			break;
-
-		default:
-			if (isset($page[1])) {
-				$section = $page[1];
-			} else {
-				$section = 'activity';
-			}
-			$content = profile_get_user_profile_html($user, $section);
-			$content = elgg_view_layout('one_column', array('content' => $content));
-			break;
+	if ($action == 'edit') {
+		// use for the core profile edit page
+		require $CONFIG->path . 'pages/profile/edit.php';
+		return;
 	}
 
-	echo elgg_view_page($title, $content);
+	// main profile page
+	$params = array(
+		'box' => elgg_view('profile/box'),
+		'num_columns' => 3,
+	);
+	$content = elgg_view_layout('widgets', $params);
+
+	$body = elgg_view_layout('one_column', array('content' => $content));
+	echo elgg_view_page($title, $body);
 }
 
 /**
